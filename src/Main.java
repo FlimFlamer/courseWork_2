@@ -1,3 +1,4 @@
+
 import Tasked.Exeption.IncorrectArgumetntExeption;
 import Tasked.Menu;
 
@@ -6,5 +7,4 @@ public class Main {
         Menu Menu = new Menu();
         Menu.startMenu();
     }
-
 }
