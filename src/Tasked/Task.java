@@ -13,6 +13,8 @@ public abstract class Task implements Repeatability {
     private String description;
     private Type type;
 
+    private static int idGenerator = 0;
+
 
     public Task(String title,
                 Type type,
@@ -21,7 +23,6 @@ public abstract class Task implements Repeatability {
         this.title = title;
         this.dateTime = dateTime;
         this.description = description;
-        int idGenerator = 0;
         this.id = idGenerator;
         idGenerator += 1;
     }

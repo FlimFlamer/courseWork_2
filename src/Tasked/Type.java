@@ -1,6 +1,6 @@
 package Tasked;
 
-public enum Type implements java.lang.reflect.Type {
+public enum Type {
     WORK("Рабочая"),
     PERSONAL("Личная");
 
