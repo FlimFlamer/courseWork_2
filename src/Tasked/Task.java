@@ -13,6 +13,9 @@ public abstract class Task implements Repeatability {
     private String description;
     private Type type;
 
+    private final idGenerator;
+
+
 
     public Task(String title,
                 Type type,
