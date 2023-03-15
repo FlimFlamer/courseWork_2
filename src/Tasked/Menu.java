@@ -1,17 +1,20 @@
 package Tasked;
 
 import Tasked.Exeption.IncorrectArgumetntExeption;
+import Tasked.Exeption.TaskNotFoundExeption;
 import Tasked.Repeatability.*;
 import Tasked.Service.TaskService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
 public class Menu {
 
-    private static final TaskService taskService = new TaskService();
+    private static final TaskService TASK_SERVICE = new TaskService();
     private static final Pattern DATE_TIME_PATTERN = Pattern.compile("\\d{2}\\.\\d{2}\\.\\d{4} \\d{2}\\:\\d{2}");
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
 
@@ -28,8 +31,10 @@ public class Menu {
                             inputTask(scanner);
                             break;
                         case 2:
+                            removeToId(scanner);
                             break;
                         case 3:
+                            printAllTask(scanner);
                             break;
                         case 0:
                             break label;
@@ -79,7 +84,7 @@ public class Menu {
             }
 
             if (task != null) {
-                taskService.add(task);
+                TASK_SERVICE.add(task);
                 System.out.println("Задача добавленна.");
             } else {
                 System.out.println("Введены некоректные данные по задаче.");
@@ -92,7 +97,6 @@ public class Menu {
 
             if (title.isBlank()) {
                 System.out.println("Необходимо ввести название задачи!");
-                scanner.close();
             }
 
             return title;
@@ -104,7 +108,6 @@ public class Menu {
 
             if (description.isBlank()) {
                 System.out.println("Необходимо ввести описание задачи!");
-                scanner.close();
             }
 
             return description;
@@ -126,7 +129,6 @@ public class Menu {
                     break;
                 default:
                     System.out.println("Тип задачи введен некоректно.");
-                    scanner.close();
             }
 
             return type;
@@ -142,7 +144,6 @@ public class Menu {
                 return LocalDateTime.parse(dateTime, DATE_TIME_FORMATTER);
             } else {
                 System.out.println("Введите дату и время в формате dd.MM.yyyy HH:mm");
-                scanner.close();
                 return null;
             }
         }
@@ -154,7 +155,6 @@ public class Menu {
                 return scanner.nextInt();
             } else {
                 System.out.println("Выберете повторяемость задачи!");
-                scanner.close();
             }
             return -1;
         }
@@ -162,4 +162,23 @@ public class Menu {
         private static void printMenu () {
             System.out.println("1. Добавить задачу\n2. Удалить задачу\n3. Получить задачу на указанный день.\n0. Выход.");
         }
+
+        private static void removeToId(Scanner scanner) {
+            System.out.println("Введите id задачи для удаления");
+            int id = scanner.nextInt();
+            try {
+                TASK_SERVICE.remove(id);
+            } catch (TaskNotFoundExeption e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        private static void printAllTask(Scanner scanner) {
+            System.out.println("Введите дату для вывода");
+            String date  = scanner.nextLine();
+            LocalDate parse = LocalDate.parse(date);
+            Collection<Task> allByDate = TASK_SERVICE.getAllByDate(parse);
+            allByDate.forEach(System.out::println);
+        }
+
     }
